@@ -1,0 +1,9 @@
+<html>
+	<div align="center">
+		This is a testing software which collects playtraces and surveys.<br/>
+		This is the an experiment will help advance the science behind the tutorial generation.<br/>
+		<br/>
+		Play a game level, then complete a survey question.<br/>
+		Try to play 10 levels at least.
+	</div>
+</html>
