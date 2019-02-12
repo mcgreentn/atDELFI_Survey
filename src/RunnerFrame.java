@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
@@ -31,6 +32,11 @@ import javax.swing.JSeparator;
 
 public class RunnerFrame extends JFrame implements KeyListener {
     private static final long serialVersionUID = 1L;
+    
+    public static String ageValue = "-1";
+    public static String genderValue = "unknown";
+    public static String gamerValue = "-1";
+    
     public JSeparator submissionSep;
     public JLabel optionalLabel;
     public JLabel tutorialLabel;
@@ -48,6 +54,8 @@ public class RunnerFrame extends JFrame implements KeyListener {
     public JPanel gamerPanel;
     private JCheckBox[] checkboxes;
     private JButton submitButton;
+    
+    private ArrayList<JRadioButton> radioButtons;
 
     public RunnerFrame(String[] mechanics) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -57,8 +65,10 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		for (int i = 0; i < mechanics.length; i++) {
 		    this.checkboxes[i] = new JCheckBox(mechanics[i]);
 		}
+		
+		radioButtons = new ArrayList<JRadioButton>();
 	
-		startButton = new JButton("Play First Level");
+		startButton = new JButton("Play Level");
 		startButton.addActionListener(new ActionListener() {
 	
 		    @Override
@@ -92,10 +102,13 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		age = new ButtonGroup();
 		gamer = new ButtonGroup();
 		
-		JRadioButton male = new JRadioButton("female");
-		JRadioButton female = new JRadioButton("male");
+		JRadioButton male = new JRadioButton("male");
+		JRadioButton female = new JRadioButton("female");
 		JRadioButton other = new JRadioButton("other");
-		genderPanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.LEFT));
+		male.setActionCommand("0");
+		female.setActionCommand("1");
+		other.setActionCommand("2");
+		genderPanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.CENTER));
 
 		gender.add(female);
 		gender.add(male);
@@ -103,6 +116,10 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		genderPanel.add(female);
 		genderPanel.add(male);
 		genderPanel.add(other);
+		
+		radioButtons.add(female);
+		radioButtons.add(male);
+		radioButtons.add(other);
 		
 		question2 = new JLabel("Which age group do you fit within?");
 		
@@ -112,7 +129,13 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		JRadioButton fourthGroup = new JRadioButton("45-54");
 		JRadioButton fifthGroup = new JRadioButton("55+");
 		
-		agePanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.LEFT));
+		firstGroup.setActionCommand("0");
+		secondGroup.setActionCommand("1");
+		thirdGroup.setActionCommand("2");
+		fourthGroup.setActionCommand("3");
+		fifthGroup.setActionCommand("4");
+		
+		agePanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.CENTER));
 
 		age.add(firstGroup);
 		age.add(secondGroup);
@@ -126,6 +149,12 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		agePanel.add(fourthGroup);
 		agePanel.add(fifthGroup);
 		
+		radioButtons.add(firstGroup);
+		radioButtons.add(secondGroup);
+		radioButtons.add(thirdGroup);
+		radioButtons.add(fourthGroup);
+		radioButtons.add(fifthGroup);
+		
 		question3 = new JLabel("Which type of gamer best describes you?");
 		
 		JRadioButton firstGamer = new JRadioButton("Don't play games");
@@ -133,7 +162,12 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		JRadioButton thirdGamer = new JRadioButton("Play quite often");
 		JRadioButton fourthGamer = new JRadioButton("Play games everyday");
 		
-		gamerPanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.LEFT));
+		firstGamer.setActionCommand("Don't play games");
+		secondGamer.setActionCommand("Casual gamer");
+		thirdGamer.setActionCommand("Play quite often");
+		fourthGamer.setActionCommand("Play games everyday");
+		
+		gamerPanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.CENTER));
 
 		gamer.add(firstGamer);
 		gamer.add(secondGamer);
@@ -144,6 +178,11 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		gamerPanel.add(secondGamer);
 		gamerPanel.add(thirdGamer);
 		gamerPanel.add(fourthGamer);
+		
+		radioButtons.add(firstGamer);
+		radioButtons.add(secondGamer);
+		radioButtons.add(thirdGamer);
+		radioButtons.add(fourthGamer);
 		
 		question4 = new JLabel("Select mechanics that you believe are critical to WINNING the game.");
 		submissionSep = new JSeparator();
@@ -167,7 +206,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		horizontalGroup.addComponent(agePanel).addComponent(question3);
 //		horizontalGroup.addComponent(gamerPanel);
 		
-		horizontalGroup.addComponent(gamerPanel).addComponent(question4);
+		horizontalGroup.addComponent(gamerPanel).addComponent(submissionSep).addComponent(question4);
 		for (JCheckBox box : this.checkboxes) {
 		    horizontalGroup = horizontalGroup.addComponent(box);
 		}
@@ -177,7 +216,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		SequentialGroup verticalGroup = gl.createSequentialGroup().addComponent(tutorialLabel)
 			.addComponent(optionalLabel).addComponent(startButton).addComponent(submissionSep)
 			.addComponent(question1).addComponent(genderPanel).addComponent(question2)
-			.addComponent(agePanel).addComponent(question3).addComponent(gamerPanel)
+			.addComponent(agePanel).addComponent(question3).addComponent(gamerPanel).addComponent(submissionSep)
 			.addComponent(question4);
 		
 		
@@ -198,6 +237,9 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		for (JCheckBox box : this.checkboxes) {
 		    box.setEnabled(enable);
 		}
+		for (JRadioButton button : this.radioButtons) {
+			button.setEnabled(enable);
+		}
     }
     
     public void setPlayEnable(boolean enable) {
@@ -211,56 +253,65 @@ public class RunnerFrame extends JFrame implements KeyListener {
 	for (JCheckBox box : this.checkboxes) {
 	    box.setSelected(false);
 	}
+	
 	setPlayEnable(true);
     }
 
+    public void staticizeRadioButtons() {
+    	ageValue = age.getSelection().getActionCommand();
+    	genderValue = gender.getSelection().getActionCommand();
+    	gamerValue = gamer.getSelection().getActionCommand();
+    	
+    }
     private void replyToGoogleForm() {
-	this.setSubmitEnable(false);
-
-	IO linkReader = new IO();
-	String[] data = linkReader.readFile("submissionLinks.txt");
-	try {
-	    String response = 
-	    "entry." + data[1] + "=" + Runner.games.get(Runner.chosenGame) 
-	    + "&entry." + data[2] + "=" + getMechs(0) 
-	    + "&entry." + data[3] + "=" + getMechs(1)
-	    + "&entry." + data[4] + "=" + getMechs(2)
-	    + "&entry." + data[5] + "=" + getChoices() 
-	    + "&entry." + data[6] + "=" + getResults(0)
-	    + "&entry." + data[7] + "=" + getResults(1)
-	    + "&entry." + data[8] + "=" + getResults(2)
-	    + "&entry." + data[9] + "=" + getActions(0)
-	    + "&entry." + data[10] + "=" + getActions(1)
-	    + "&entry." + data[11] + "=" + getActions(2)
-	    + "&entry." + data[12] + "=" + gender.getSelection().getActionCommand()
-	    + "&entry." + data[13] + "=" + age.getSelection().getActionCommand()
-	    + "&entry." + data[14] + "=" + gamer.getSelection().getActionCommand();
-
-	    URL url = new URL(data[0]);
-	    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	    connection.setDoOutput(true);
-	    connection.setDoInput(true);
-	    connection.setRequestMethod("POST");
-	    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-	    DataOutputStream dataStream = new DataOutputStream(connection.getOutputStream());
-	    dataStream.writeBytes(response);
-	    dataStream.flush();
-	    dataStream.close();
-
-	    InputStream dataInput = connection.getInputStream();
-	    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(dataInput));
-
-	    System.out.println(bufferedReader.readLine());
-	    dataInput.close();
-	    // JOptionPane.showMessageDialog(this,
-	    // "Data is submitted.");
-	    // this.setVisible(true);
-	} catch (Exception e) {
-		e.printStackTrace();
-	    JOptionPane.showMessageDialog(this, "Can not connect to the server! Check your internet connection.");
-	}
-	Runner.submissionDone = true;
-	this.resetCheckBoxes();
+		this.setSubmitEnable(false);
+	
+		IO linkReader = new IO();
+		String[] data = linkReader.readFile("submissionLinks.txt");
+		try {
+		    String response = 
+		    "entry." + data[1] + "=" + Runner.games.get(Runner.chosenGame) 
+		    + ",&entry." + data[12] + "=" + gender.getSelection().getActionCommand()
+		    + ",&entry." + data[13] + "=" + age.getSelection().getActionCommand()
+		    + ",&entry." + data[14] + "=" + gamer.getSelection().getActionCommand() 
+		    + ","
+		    + "&entry." + data[2] + "=" + getMechs(0) 
+		    + "&entry." + data[3] + "=" + getMechs(1)
+		    + "&entry." + data[4] + "=" + getMechs(2)
+		    + "&entry." + data[5] + "=" + getChoices() 
+		    + "&entry." + data[6] + "=" + getResults(0)
+		    + "&entry." + data[7] + "=" + getResults(1)
+		    + "&entry." + data[8] + "=" + getResults(2)
+		    + "&entry." + data[9] + "=" + getActions(0)
+		    + "&entry." + data[10] + "=" + getActions(1)
+		    + "&entry." + data[11] + "=" + getActions(2);
+	
+		    System.out.println(response);
+		    URL url = new URL(data[0]);
+		    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		    connection.setDoOutput(true);
+		    connection.setDoInput(true);
+		    connection.setRequestMethod("POST");
+		    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+		    DataOutputStream dataStream = new DataOutputStream(connection.getOutputStream());
+		    dataStream.writeBytes(response);
+		    dataStream.flush();
+		    dataStream.close();
+	
+		    InputStream dataInput = connection.getInputStream();
+		    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(dataInput));
+	
+		    System.out.println(bufferedReader.readLine());
+		    dataInput.close();
+		    // JOptionPane.showMessageDialog(this,
+		    // "Data is submitted.");
+		    // this.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		    JOptionPane.showMessageDialog(this, "Can not connect to the server! Check your internet connection.");
+		}
+		Runner.submissionDone = true;
+		this.resetCheckBoxes();
     }
 
     public String getMechs(int level) {

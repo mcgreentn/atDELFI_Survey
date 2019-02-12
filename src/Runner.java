@@ -36,84 +36,88 @@ public class Runner {
     public static int totalPlayed;
 
     public static void main(String[] args) {
-	numLevels = 3;
-	playLevels = 1;
-	chosenGame = 0;
-
-	File[] files = new File("examples/games/").listFiles();
-	games = new ArrayList<String>();
-	for (File f : files) {
-	    String temp = f.getName().substring(0, f.getName().lastIndexOf('.'));
-	    if (temp.trim().length() > 0)
-		games.add(temp);
-	}
-	random = new Random();
-	mouseClick = RunnerEnum.NONE;
-
-	ReasonFrame reasonFrame = new ReasonFrame();
-	HashMap<String, RunnerFrame> frames = new HashMap<>();
-	for (String g : games) {
-	    frames.put(g, new RunnerFrame(SurveyText.getSurveyText(g)));
-	    frames.get(g).setVisible(false);
-	    frames.get(g).setFocusable(false);
-	    frames.get(g).setTitle(g);
-	}
-	reasonFrame.setVisible(true);
-	reasonFrame.setFocusable(true);
-	while (mouseClick == RunnerEnum.NONE) {
-	    System.out.print("");
-	}
-	mouseClick = RunnerEnum.NONE;
-	reasonFrame.setVisible(false);
-
-	submissionDone = true;
-	while (true) {
-	    while(!submissionDone) {
-	    	System.out.print("");
-	    }
-	    for (String g : games) {
-			frames.get(g).setVisible(false);
-			frames.get(g).setFocusable(false);
-	    }
-	    chosenGame = (chosenGame + random.nextInt(games.size() - 1) + 1) % games.size();
-	    frames.get(games.get(chosenGame)).setVisible(true);
-	    frames.get(games.get(chosenGame)).setFocusable(true);
-	    frames.get(games.get(chosenGame)).pack();
-		ArrayList<Integer> levels = new ArrayList<Integer>();
-
-	    for (int i = 0; i < playLevels; i++) {
-			submissionDone = false;
-			totalPlayed = 0;
-			
+		numLevels = 3;
+		playLevels = 1;
+		chosenGame = 0;
 	
-			do {
-				chosenLevel = totalPlayed;
-				levels.add(chosenLevel);
-			    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 2);
-			    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
-			    mouseClick = RunnerEnum.NONE;
-			    frames.get(games.get(chosenGame)).setVisible(true);
-			    frames.get(games.get(chosenGame)).setFocusable(true);
-			    while (mouseClick == RunnerEnum.NONE) {
-			    	System.out.print("");
-			    }
-			    switch (mouseClick) {
-				    case TUTORIAL:
-					for (String g : games) {
-					    frames.get(g).setVisible(false);
-					}
-					playGoodDesignGame();
-					playedFirst = true;
-					playedSecond = true;
-					playedThird = true;
-					totalPlayed++;
-					break;
-				    default:
-					break;
-			    }
-			} while (mouseClick != RunnerEnum.SUBMIT);
-	    }
-	}
+		File[] files = new File("examples/games/").listFiles();
+		games = new ArrayList<String>();
+		for (File f : files) {
+		    String temp = f.getName().substring(0, f.getName().lastIndexOf('.'));
+		    if (temp.trim().length() > 0)
+			games.add(temp);
+		}
+		random = new Random();
+		mouseClick = RunnerEnum.NONE;
+	
+		ReasonFrame reasonFrame = new ReasonFrame();
+		HashMap<String, RunnerFrame> frames = new HashMap<>();
+		for (String g : games) {
+		    frames.put(g, new RunnerFrame(SurveyText.getSurveyText(g)));
+		    frames.get(g).setVisible(false);
+		    frames.get(g).setFocusable(false);
+		    frames.get(g).setTitle(g);
+		}
+		reasonFrame.setVisible(true);
+		reasonFrame.setFocusable(true);
+		while (mouseClick == RunnerEnum.NONE) {
+		    System.out.print("");
+		}
+		mouseClick = RunnerEnum.NONE;
+		reasonFrame.setVisible(false);
+	
+		submissionDone = true;
+		while (true) {
+		    while(!submissionDone) {
+		    	System.out.print("");
+		    }
+		    for (String g : games) {
+				frames.get(g).setVisible(false);
+				frames.get(g).setFocusable(false);
+		    }
+		    chosenGame = (chosenGame + random.nextInt(games.size() - 1) + 1) % games.size();
+		    frames.get(games.get(chosenGame)).setVisible(true);
+		    frames.get(games.get(chosenGame)).setFocusable(true);
+		    frames.get(games.get(chosenGame)).pack();
+			ArrayList<Integer> levels = new ArrayList<Integer>();
+	
+		    for (int i = 0; i < playLevels; i++) {
+				submissionDone = false;
+				totalPlayed = 0;
+				
+		
+				do {
+					chosenLevel = totalPlayed;
+					levels.add(chosenLevel);
+				    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 2);
+				    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
+				    mouseClick = RunnerEnum.NONE;
+				    frames.get(games.get(chosenGame)).setVisible(true);
+				    frames.get(games.get(chosenGame)).setFocusable(true);
+				    while (mouseClick == RunnerEnum.NONE) {
+				    	System.out.print("");
+				    }
+				    switch (mouseClick) {
+					    case TUTORIAL:
+						for (String g : games) {
+						    frames.get(g).setVisible(false);
+						}
+						playGoodDesignGame();
+						playedFirst = true;
+						playedSecond = true;
+						playedThird = true;
+						totalPlayed++;
+						break;
+					    default:
+						break;
+				    }
+				} while (mouseClick != RunnerEnum.SUBMIT);
+				
+//				// we just clicked submit, so set all radio buttons to the chosen game's buttons
+//			    frames.get(games.get(chosenGame)).age.getSelection()
+
+		    }
+		}
     }
 
     public static int getNumberOfFiles(String filePath, String fileName) {
