@@ -1,9 +1,12 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 import tracks.ArcadeMachine;
+import tutorialGeneration.VisualDemonstrationInterfacer;
+import video.basics.BunchOfGames;
 
 public class Runner {
     public static int numLevels;
@@ -28,6 +31,9 @@ public class Runner {
     public static String tutorialLevelNumber;
     public static boolean playedFirst;
     public static boolean playedSecond;
+    public static boolean playedThird;
+    
+    public static int totalPlayed;
 
     public static void main(String[] args) {
 	numLevels = 3;
@@ -63,45 +69,49 @@ public class Runner {
 	submissionDone = true;
 	while (true) {
 	    while(!submissionDone) {
-		System.out.print("");
+	    	System.out.print("");
 	    }
 	    for (String g : games) {
-		frames.get(g).setVisible(false);
-		frames.get(g).setFocusable(false);
+			frames.get(g).setVisible(false);
+			frames.get(g).setFocusable(false);
 	    }
 	    chosenGame = (chosenGame + random.nextInt(games.size() - 1) + 1) % games.size();
 	    frames.get(games.get(chosenGame)).setVisible(true);
 	    frames.get(games.get(chosenGame)).setFocusable(true);
 	    frames.get(games.get(chosenGame)).pack();
+		ArrayList<Integer> levels = new ArrayList<Integer>();
 
 	    for (int i = 0; i < playLevels; i++) {
-		submissionDone = false;
-		playedFirst = false;
-		playedSecond = false;
-		chosenLevel = Runner.random.nextInt(Runner.numLevels);
-
-		do {
-		    frames.get(games.get(chosenGame)).setSubmitEnable(playedFirst && playedSecond);
-
-		    mouseClick = RunnerEnum.NONE;
-		    frames.get(games.get(chosenGame)).setVisible(true);
-		    frames.get(games.get(chosenGame)).setFocusable(true);
-		    while (mouseClick == RunnerEnum.NONE) {
-			System.out.print("");
-		    }
-		    switch (mouseClick) {
-		    case TUTORIAL:
-			for (String g : games) {
-			    frames.get(g).setVisible(false);
-			}
-			playGoodDesignGame();
-			playedFirst = true;
-			playedSecond = true;
-			break;
-		    default:
-			break;
-		    }
-		} while (mouseClick != RunnerEnum.SUBMIT);
+			submissionDone = false;
+			totalPlayed = 0;
+			
+	
+			do {
+				chosenLevel = totalPlayed;
+				levels.add(chosenLevel);
+			    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 2);
+			    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
+			    mouseClick = RunnerEnum.NONE;
+			    frames.get(games.get(chosenGame)).setVisible(true);
+			    frames.get(games.get(chosenGame)).setFocusable(true);
+			    while (mouseClick == RunnerEnum.NONE) {
+			    	System.out.print("");
+			    }
+			    switch (mouseClick) {
+				    case TUTORIAL:
+					for (String g : games) {
+					    frames.get(g).setVisible(false);
+					}
+					playGoodDesignGame();
+					playedFirst = true;
+					playedSecond = true;
+					playedThird = true;
+					totalPlayed++;
+					break;
+				    default:
+					break;
+			    }
+			} while (mouseClick != RunnerEnum.SUBMIT);
 	    }
 	}
     }
@@ -122,14 +132,27 @@ public class Runner {
     }
 
     public static void playGoodDesignGame() {
-	String gameFile = "examples/games/" + games.get(Runner.chosenGame) + ".txt";
-	String levelFile = "examples/levels/" + games.get(Runner.chosenGame) + "_lvl" + chosenLevel + ".txt";
-	String actionFile = "examples/actions/" + games.get(Runner.chosenGame) + "_lvl" + chosenLevel + ".txt";
+		String gameFile = "examples/games/" + games.get(Runner.chosenGame) + ".txt";
+		String levelFile = "examples/levels/" + games.get(Runner.chosenGame) + "_lvl" + chosenLevel + ".txt";
+		String mechanicsFile = games.get(Runner.chosenGame) + "/human/" + chosenLevel + "/0" + "/interactions/interaction.json";
+		String resultsFile = games.get(Runner.chosenGame) + "/human/" + chosenLevel + "/0" + "/result/result.json";
+		double[] result;
+		try {
+			VisualDemonstrationInterfacer vdi = new VisualDemonstrationInterfacer(games.get(Runner.chosenGame), false);
+			ArrayList<BunchOfGames> bogs = new ArrayList<>();
+			BunchOfGames game = new BunchOfGames(gameFile, levelFile, "human", "" + chosenLevel, "0");
+			bogs.add(game);
+			String[] human = {"human"};
+			vdi.runBunchOfGames(bogs, human, chosenLevel, 0);
+	//		result = ArcadeMachine.playOneGame(gameFile, levelFile, actionFile,
+	//			Runner.random.nextInt(Integer.MAX_VALUE));
+	//		Runner.win = result[0];
+	//		Runner.score = result[1];
+	//		Runner.time = result[2];
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-	double[] result = ArcadeMachine.playOneGame(gameFile, levelFile, actionFile,
-		Runner.random.nextInt(Integer.MAX_VALUE));
-	Runner.win = result[0];
-	Runner.score = result[1];
-	Runner.time = result[2];
     }
 }

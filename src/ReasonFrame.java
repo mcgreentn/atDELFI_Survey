@@ -22,7 +22,7 @@ public class ReasonFrame extends JFrame implements KeyListener{
 	
 	public ReasonFrame(){
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle("Level Generation Survey");
+		this.setTitle("Tutorial Survey");
 		this.setLocation(300, 100);
 		this.addKeyListener (this);
 	}
