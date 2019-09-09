@@ -1,0 +1,11 @@
+[{"interaction":"TransformTo","tick":"12","pairInteractionTick":"12 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"14","pairInteractionTick":"14 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"16","pairInteractionTick":"16 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"18","pairInteractionTick":"18 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"StepBack","tick":"21","pairInteractionTick":"21 - StepBack","sprite2":"wall","sprite1":"avatar"},
+{"interaction":"TransformTo","tick":"25","pairInteractionTick":"25 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"28","pairInteractionTick":"28 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"49","pairInteractionTick":"49 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"51","pairInteractionTick":"51 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"54","pairInteractionTick":"54 - TransformTo","sprite2":"marsh","sprite1":"shovel"},
+{"interaction":"TransformTo","tick":"56","pairInteractionTick":"56 - TransformTo","sprite2":"marsh","sprite1":"shovel"}]

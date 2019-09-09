@@ -4,19 +4,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
+import javax.swing.ImageIcon;
 
 import tools.IO;
 
@@ -29,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 
 public class RunnerFrame extends JFrame implements KeyListener {
     private static final long serialVersionUID = 1L;
@@ -53,17 +61,26 @@ public class RunnerFrame extends JFrame implements KeyListener {
     public JPanel agePanel;
     public JPanel gamerPanel;
     private JCheckBox[] checkboxes;
+    
+    private JTextField[] textFields;
     private JButton submitButton;
+    
+    private int numFields = 5;
     
     private ArrayList<JRadioButton> radioButtons;
 
-    public RunnerFrame(String[] mechanics) {
+    public RunnerFrame(String[] mechanics, String imagePath) {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocation(300, 100);
 		this.addKeyListener(this);
 		this.checkboxes = new JCheckBox[mechanics.length];
 		for (int i = 0; i < mechanics.length; i++) {
 		    this.checkboxes[i] = new JCheckBox(mechanics[i]);
+		}
+		
+		this.textFields = new JTextField[numFields];
+		for(int i = 0; i < numFields; i++){
+			this.textFields[i] = new JTextField(35);
 		}
 		
 		radioButtons = new ArrayList<JRadioButton>();
@@ -79,7 +96,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		startButton.setFocusable(false);
 	
 		optionalLabel = new JLabel(
-			"<html><div align=\"center\">(Mandatory) Play 3 levels to<br/>understand the game</div></html>");
+			"<html><div align=\"center\">(Mandatory) Play to understand the game.<br/>Use the only the ARROW KEYS and SPACE BAR as controls</div></html>");
 		optionalLabel.setHorizontalAlignment(JLabel.CENTER);
 	
 		tutorialLabel = new JLabel();
@@ -91,7 +108,8 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		    @Override
 		    public void actionPerformed(ActionEvent e) {
 			Runner.mouseClick = RunnerEnum.SUBMIT;
-			replyToGoogleForm();
+//			replyToGoogleForm();
+			saveToTSV();
 		    }
 		});
 		submitButton.setFocusable(false);
@@ -162,10 +180,10 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		JRadioButton thirdGamer = new JRadioButton("Play quite often");
 		JRadioButton fourthGamer = new JRadioButton("Play games everyday");
 		
-		firstGamer.setActionCommand("Don't play games");
-		secondGamer.setActionCommand("Casual gamer");
-		thirdGamer.setActionCommand("Play quite often");
-		fourthGamer.setActionCommand("Play games everyday");
+		firstGamer.setActionCommand("0");
+		secondGamer.setActionCommand("1");
+		thirdGamer.setActionCommand("2");
+		fourthGamer.setActionCommand("3");
 		
 		gamerPanel = new JPanel((LayoutManager) new FlowLayout(FlowLayout.CENTER));
 
@@ -184,7 +202,8 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		radioButtons.add(thirdGamer);
 		radioButtons.add(fourthGamer);
 		
-		question4 = new JLabel("Select mechanics that you believe are critical to WINNING the game.");
+		question4 = new JLabel("In short sentences (1-2 per box) describe what the "
+				+ "player needs to do in order to perform well in the game");
 		submissionSep = new JSeparator();
 	
 		JPanel pane = (JPanel) getContentPane();
@@ -207,10 +226,25 @@ public class RunnerFrame extends JFrame implements KeyListener {
 //		horizontalGroup.addComponent(gamerPanel);
 		
 		horizontalGroup.addComponent(gamerPanel).addComponent(submissionSep).addComponent(question4);
-		for (JCheckBox box : this.checkboxes) {
-		    horizontalGroup = horizontalGroup.addComponent(box);
+//		for (JCheckBox box : this.checkboxes) {
+//		    horizontalGroup = horizontalGroup.addComponent(box);
+//		}
+		for(JTextField field : this.textFields) {
+		    horizontalGroup = horizontalGroup.addComponent(field);
+		}
+		BufferedImage myPicture;
+		JLabel picLabel = null;
+		try {
+			myPicture = ImageIO.read(new File(imagePath));
+			picLabel = new JLabel(new ImageIcon(myPicture));
+//			add(picLabel);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		horizontalGroup = horizontalGroup.addComponent(submitButton);
+
+		horizontalGroup = horizontalGroup.addComponent(picLabel);
 		gl.setHorizontalGroup(horizontalGroup);
 	
 		SequentialGroup verticalGroup = gl.createSequentialGroup().addComponent(tutorialLabel)
@@ -220,10 +254,16 @@ public class RunnerFrame extends JFrame implements KeyListener {
 			.addComponent(question4);
 		
 		
-		for (JCheckBox box : this.checkboxes) {
-		    verticalGroup = verticalGroup.addComponent(box);
+//		for (JCheckBox box : this.checkboxes) {
+//		    verticalGroup = verticalGroup.addComponent(box);
+//		}
+		
+		for(JTextField field : this.textFields) {
+		    verticalGroup = verticalGroup.addComponent(field);
 		}
 		verticalGroup = verticalGroup.addComponent(submitButton);
+
+		verticalGroup = verticalGroup.addComponent(picLabel);
 		gl.setVerticalGroup(verticalGroup);
 	
 		pack();
@@ -240,9 +280,19 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		for (JRadioButton button : this.radioButtons) {
 			button.setEnabled(enable);
 		}
+		
+		for(JTextField field : this.textFields) {
+			field.setEnabled(enable);
+		}
+		
+		question1.setEnabled(enable);
+		question2.setEnabled(enable);
+		question3.setEnabled(enable);
+		question4.setEnabled(enable);
     }
     
     public void setPlayEnable(boolean enable) {
+    	optionalLabel.setEnabled(enable);
     	startButton.setEnabled(enable);
     }
     
@@ -252,6 +302,9 @@ public class RunnerFrame extends JFrame implements KeyListener {
 	this.setSubmitEnable(false);
 	for (JCheckBox box : this.checkboxes) {
 	    box.setSelected(false);
+	}
+	for(JTextField field : this.textFields) {
+		field.setText("");
 	}
 	
 	setPlayEnable(true);
@@ -271,6 +324,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		try {
 		    String response = 
 		    "entry." + data[1] + "=" + Runner.games.get(Runner.chosenGame) 
+		    + ",&entry." + data[15] + "=" + Runner.id
 		    + ",&entry." + data[12] + "=" + gender.getSelection().getActionCommand()
 		    + ",&entry." + data[13] + "=" + age.getSelection().getActionCommand()
 		    + ",&entry." + data[14] + "=" + gamer.getSelection().getActionCommand() 
@@ -289,6 +343,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		    System.out.println(response);
 		    URL url = new URL(data[0]);
 		    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		    connection.setConnectTimeout(5000);
 		    connection.setDoOutput(true);
 		    connection.setDoInput(true);
 		    connection.setRequestMethod("POST");
@@ -308,10 +363,38 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		    // this.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
-		    JOptionPane.showMessageDialog(this, "Can not connect to the server! Check your internet connection.");
+		    JOptionPane.showMessageDialog(this, "Can not connect to the server! Check your internet connection");
 		}
 		Runner.submissionDone = true;
 		this.resetCheckBoxes();
+    }
+    
+    public void saveToTSV() {
+		this.setSubmitEnable(false);
+		System.out.println("Saving to TSV!");
+		try {
+			
+			FileWriter fos;
+			fos = new FileWriter("results.tsv", true);
+			PrintWriter dos = new PrintWriter(fos);
+			dos.print("blank\t");
+			dos.print(Runner.id + "\t");
+			dos.print(Runner.games.get(Runner.chosenGame) + "\t");
+			dos.print(getMechs(0) + "\t" + getMechs(1) + "\t" + getMechs(2) + "\t"); 
+			dos.print(getChoices() + "\t");
+			dos.print(getResults(0) + "\t" + getResults(1) + "\t" + getResults(2) + "\t");
+			dos.print(getActions(0) + "\t" + getActions(1) + "\t" + getActions(2) + "\t");
+			dos.print(gender.getSelection().getActionCommand() + "\t");
+			dos.print(age.getSelection().getActionCommand() + "\t");
+			dos.print(gamer.getSelection().getActionCommand()+ "\n");
+			dos.close();
+			fos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Runner.submissionDone = true;
+		this.resetCheckBoxes();		
     }
 
     public String getMechs(int level) {
@@ -348,13 +431,17 @@ public class RunnerFrame extends JFrame implements KeyListener {
     }
 
     public String getChoices() {
-	String result = "";
-	for (JCheckBox box : this.checkboxes) {
-	    if (box.isSelected()) {
-		result += box.getText() + ",";
-	    }
-	}
-	return result;
+    	String result = "";
+//	for (JCheckBox box : this.checkboxes) {
+//	    if (box.isSelected()) {
+//		result += box.getText() + ",";
+//	    }
+//	}
+		for (JTextField box : this.textFields) {
+			result += box.getText() + ",";
+		}
+	
+		return result;
     }
 
     @Override

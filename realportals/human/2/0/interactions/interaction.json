@@ -1,0 +1,10 @@
+[{"interaction":"CollectResource","tick":"0","pairInteractionTick":"0 - CollectResource","sprite2":"avatarIn","sprite1":"weapon"},
+{"interaction":"TransformTo","tick":"15","pairInteractionTick":"15 - TransformTo","sprite2":"avatarIn","sprite1":"boulder"},
+{"interaction":"AttractGaze","tick":"15","pairInteractionTick":"15 - AttractGaze","sprite2":"avatarIn","sprite1":"boulderm"},
+{"interaction":"StepBack","tick":"15","pairInteractionTick":"15 - StepBack","sprite2":"boulder","sprite1":"avatarIn"},
+{"interaction":"KillBoth","tick":"18","pairInteractionTick":"18 - KillBoth","sprite2":"boulderm","sprite1":"water"},
+{"interaction":"TransformTo","tick":"26","pairInteractionTick":"26 - TransformTo","sprite2":"avatarIn","sprite1":"boulder"},
+{"interaction":"AttractGaze","tick":"26","pairInteractionTick":"26 - AttractGaze","sprite2":"avatarIn","sprite1":"boulderm"},
+{"interaction":"StepBack","tick":"26","pairInteractionTick":"26 - StepBack","sprite2":"boulder","sprite1":"avatarIn"},
+{"interaction":"KillBoth","tick":"29","pairInteractionTick":"29 - KillBoth","sprite2":"boulderm","sprite1":"water"},
+{"interaction":"KillSprite","tick":"36","pairInteractionTick":"36 - KillSprite","sprite2":"water","sprite1":"avatarIn"}]

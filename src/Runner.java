@@ -1,8 +1,10 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 
 import tracks.ArcadeMachine;
 import tutorialGeneration.VisualDemonstrationInterfacer;
@@ -33,12 +35,17 @@ public class Runner {
     public static boolean playedSecond;
     public static boolean playedThird;
     
+    public static String id;
+    
     public static int totalPlayed;
 
     public static void main(String[] args) {
-		numLevels = 3;
+		numLevels = 5;
 		playLevels = 1;
-		chosenGame = 0;
+		chosenGame = -1;
+		
+		// make ID
+		id = UUID.randomUUID().toString().replace("-", "");
 	
 		File[] files = new File("examples/games/").listFiles();
 		games = new ArrayList<String>();
@@ -47,13 +54,14 @@ public class Runner {
 		    if (temp.trim().length() > 0)
 			games.add(temp);
 		}
+		Collections.shuffle(games);
 		random = new Random();
 		mouseClick = RunnerEnum.NONE;
 	
 		ReasonFrame reasonFrame = new ReasonFrame();
 		HashMap<String, RunnerFrame> frames = new HashMap<>();
 		for (String g : games) {
-		    frames.put(g, new RunnerFrame(SurveyText.getSurveyText(g)));
+		    frames.put(g, new RunnerFrame(SurveyText.getSurveyText(g), "dictionaries/" + g + "-dictionary.png"));
 		    frames.get(g).setVisible(false);
 		    frames.get(g).setFocusable(false);
 		    frames.get(g).setTitle(g);
@@ -75,22 +83,23 @@ public class Runner {
 				frames.get(g).setVisible(false);
 				frames.get(g).setFocusable(false);
 		    }
-		    chosenGame = (chosenGame + random.nextInt(games.size() - 1) + 1) % games.size();
+		    chosenGame = (chosenGame+1) % games.size();
 		    frames.get(games.get(chosenGame)).setVisible(true);
 		    frames.get(games.get(chosenGame)).setFocusable(true);
 		    frames.get(games.get(chosenGame)).pack();
 			ArrayList<Integer> levels = new ArrayList<Integer>();
 	
 		    for (int i = 0; i < playLevels; i++) {
+
 				submissionDone = false;
 				totalPlayed = 0;
 				
 		
 				do {
-					chosenLevel = totalPlayed;
+					chosenLevel = (totalPlayed) % 5;
 					levels.add(chosenLevel);
 				    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 2);
-				    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
+//				    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
 				    mouseClick = RunnerEnum.NONE;
 				    frames.get(games.get(chosenGame)).setVisible(true);
 				    frames.get(games.get(chosenGame)).setFocusable(true);

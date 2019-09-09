@@ -1,0 +1,4 @@
+[{"interaction":"CollectResource","tick":"0","pairInteractionTick":"0 - CollectResource","sprite2":"avatarIn","sprite1":"weapon"},
+{"interaction":"TransformTo","tick":"26","pairInteractionTick":"26 - TransformTo","sprite2":"weaponToggle1","sprite1":"avatarIn"},
+{"interaction":"StepBack","tick":"33","pairInteractionTick":"33 - StepBack","sprite2":"wall","sprite1":"avatarOut"},
+{"interaction":"KillSprite","tick":"41","pairInteractionTick":"41 - KillSprite","sprite2":"water","sprite1":"avatarOut"}]

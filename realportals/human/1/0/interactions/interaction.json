@@ -1,0 +1,2 @@
+[{"interaction":"CollectResource","tick":"0","pairInteractionTick":"0 - CollectResource","sprite2":"avatarIn","sprite1":"weapon"},
+{"interaction":"KillSprite","tick":"6","pairInteractionTick":"6 - KillSprite","sprite2":"water","sprite1":"avatarIn"}]
