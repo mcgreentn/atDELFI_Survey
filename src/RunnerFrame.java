@@ -273,18 +273,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		    "entry." + data[1] + "=" + Runner.games.get(Runner.chosenGame) 
 		    + ",&entry." + data[12] + "=" + gender.getSelection().getActionCommand()
 		    + ",&entry." + data[13] + "=" + age.getSelection().getActionCommand()
-		    + ",&entry." + data[14] + "=" + gamer.getSelection().getActionCommand() 
-		    + ","
-		    + "&entry." + data[2] + "=" + getMechs(0) 
-		    + "&entry." + data[3] + "=" + getMechs(1)
-		    + "&entry." + data[4] + "=" + getMechs(2)
-		    + "&entry." + data[5] + "=" + getChoices() 
-		    + "&entry." + data[6] + "=" + getResults(0)
-		    + "&entry." + data[7] + "=" + getResults(1)
-		    + "&entry." + data[8] + "=" + getResults(2)
-		    + "&entry." + data[9] + "=" + getActions(0)
-		    + "&entry." + data[10] + "=" + getActions(1)
-		    + "&entry." + data[11] + "=" + getActions(2);
+		    + ",&entry." + data[14] + "=" + gamer.getSelection().getActionCommand(); 
 	
 		    System.out.println(response);
 		    URL url = new URL(data[0]);
@@ -303,9 +292,7 @@ public class RunnerFrame extends JFrame implements KeyListener {
 	
 		    System.out.println(bufferedReader.readLine());
 		    dataInput.close();
-		    // JOptionPane.showMessageDialog(this,
-		    // "Data is submitted.");
-		    // this.setVisible(true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		    JOptionPane.showMessageDialog(this, "Can not connect to the server! Check your internet connection.");
@@ -314,48 +301,6 @@ public class RunnerFrame extends JFrame implements KeyListener {
 		this.resetCheckBoxes();
     }
 
-    public String getMechs(int level) {
-		String actionFile = Runner.games.get(Runner.chosenGame) + "/human/"+ level + "/0/interactions/interaction.json";
-		String result = "";
-		IO reader = new IO();
-		String[] lines = reader.readFile(actionFile);
-		for (int i = 0; i < lines.length; i++) {
-		    result += lines[i] + ",";
-		}
-		return result;
-    }
-    
-    public String getActions(int level) {
-		String actionFile = Runner.games.get(Runner.chosenGame) + "/human/"+ level + "/0/actions/actions.json";
-		String result = "";
-		IO reader = new IO();
-		String[] lines = reader.readFile(actionFile);
-		for (int i = 0; i < lines.length; i++) {
-		    result += lines[i] + ",";
-		}
-		return result;
-    }
-    
-    public String getResults(int level) {
-    	String actionFile = Runner.games.get(Runner.chosenGame) + "/human/"+ level + "/0/result/result.json";
-    	String result = "";
-    	IO reader = new IO();
-    	String[] lines = reader.readFile(actionFile);
-    	for (int i = 0; i < lines.length; i++) {
-    	    result += lines[i] + ",";
-    	}
-    	return result;
-    }
-
-    public String getChoices() {
-	String result = "";
-	for (JCheckBox box : this.checkboxes) {
-	    if (box.isSelected()) {
-		result += box.getText() + ",";
-	    }
-	}
-	return result;
-    }
 
     @Override
     public void keyTyped(KeyEvent e) {

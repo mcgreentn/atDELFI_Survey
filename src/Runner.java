@@ -21,6 +21,7 @@ public class Runner {
     public static boolean submissionDone;
 
     public static ArrayList<String> games;
+    public static ArrayList<String> levels;
 
     public static RunnerEnum mouseClick;
 
@@ -36,7 +37,7 @@ public class Runner {
     public static int totalPlayed;
 
     public static void main(String[] args) {
-		numLevels = 3;
+		
 		playLevels = 1;
 		chosenGame = 0;
 	
@@ -47,8 +48,17 @@ public class Runner {
 		    if (temp.trim().length() > 0)
 			games.add(temp);
 		}
+		
+		files = new File("examples/levels/").listFiles();
+		levels = new ArrayList<String>();
+		for (File f : files) {
+			String temp = f.getName().substring(f.getName().lastIndexOf('.') - 1, f.getName().lastIndexOf('.'));
+		    if (temp.trim().length() > 0)
+			levels.add(temp);
+		}
 		random = new Random();
 		mouseClick = RunnerEnum.NONE;
+		numLevels = levels.size();
 	
 		ReasonFrame reasonFrame = new ReasonFrame();
 		HashMap<String, RunnerFrame> frames = new HashMap<>();
@@ -58,65 +68,59 @@ public class Runner {
 		    frames.get(g).setFocusable(false);
 		    frames.get(g).setTitle(g);
 		}
-		reasonFrame.setVisible(true);
-		reasonFrame.setFocusable(true);
-		while (mouseClick == RunnerEnum.NONE) {
-		    System.out.print("");
-		}
+
 		mouseClick = RunnerEnum.NONE;
-		reasonFrame.setVisible(false);
-	
+		reasonFrame.setAlwaysOnTop(true);
+
 		submissionDone = true;
 		while (true) {
-		    while(!submissionDone) {
-		    	System.out.print("");
-		    }
-		    for (String g : games) {
-				frames.get(g).setVisible(false);
-				frames.get(g).setFocusable(false);
-		    }
-		    chosenGame = (chosenGame + random.nextInt(games.size() - 1) + 1) % games.size();
-		    frames.get(games.get(chosenGame)).setVisible(true);
-		    frames.get(games.get(chosenGame)).setFocusable(true);
-		    frames.get(games.get(chosenGame)).pack();
-			ArrayList<Integer> levels = new ArrayList<Integer>();
-	
-		    for (int i = 0; i < playLevels; i++) {
-				submissionDone = false;
-				totalPlayed = 0;
+			
+			reasonFrame.setVisible(true);
+			reasonFrame.setFocusable(true);
+			while (mouseClick == RunnerEnum.NONE) {
+			    System.out.print("");
+			}
+			mouseClick = RunnerEnum.NONE;
+		   	reasonFrame.setVisible(false);
+		   	reasonFrame.setFocusable(false);
+			chosenLevel = Integer.parseInt(levels.get(random.nextInt(levels.size())));
+			playGoodDesignGame();
+//		    for (int i = 0; i < playLevels; i++) {
+//				submissionDone = false;
+//				totalPlayed = 0;
 				
 		
-				do {
-					chosenLevel = totalPlayed;
-					levels.add(chosenLevel);
-				    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 2);
-				    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 2);
-				    mouseClick = RunnerEnum.NONE;
-				    frames.get(games.get(chosenGame)).setVisible(true);
-				    frames.get(games.get(chosenGame)).setFocusable(true);
-				    while (mouseClick == RunnerEnum.NONE) {
-				    	System.out.print("");
-				    }
-				    switch (mouseClick) {
-					    case TUTORIAL:
-						for (String g : games) {
-						    frames.get(g).setVisible(false);
-						}
-						playGoodDesignGame();
-						playedFirst = true;
-						playedSecond = true;
-						playedThird = true;
-						totalPlayed++;
-						break;
-					    default:
-						break;
-				    }
-				} while (mouseClick != RunnerEnum.SUBMIT);
+//				do {
+//					chosenLevel = totalPlayed;
+//					levels.add(chosenLevel);
+////				    frames.get(games.get(chosenGame)).setSubmitEnable(totalPlayed > 0);
+////				    frames.get(games.get(chosenGame)).setPlayEnable(totalPlayed <= 0);
+//				    mouseClick = RunnerEnum.NONE;
+//				    frames.get(games.get(chosenGame)).setVisible(true);
+//				    frames.get(games.get(chosenGame)).setFocusable(true);
+//				    while (mouseClick == RunnerEnum.NONE) {
+//				    	System.out.print("");
+//				    }
+//				    switch (mouseClick) {
+//					    case TUTORIAL:
+//						for (String g : games) {
+//						    frames.get(g).setVisible(false);
+//						}
+//						playGoodDesignGame();
+//						playedFirst = true;
+//						playedSecond = true;
+//						playedThird = true;
+//						totalPlayed++;
+//						break;
+//					    default:
+//						break;
+//				    }
+//				} while (mouseClick != RunnerEnum.SUBMIT);
 				
 //				// we just clicked submit, so set all radio buttons to the chosen game's buttons
 //			    frames.get(games.get(chosenGame)).age.getSelection()
 
-		    }
+//		    }
 		}
     }
 
@@ -138,8 +142,6 @@ public class Runner {
     public static void playGoodDesignGame() {
 		String gameFile = "examples/games/" + games.get(Runner.chosenGame) + ".txt";
 		String levelFile = "examples/levels/" + games.get(Runner.chosenGame) + "_lvl" + chosenLevel + ".txt";
-		String mechanicsFile = games.get(Runner.chosenGame) + "/human/" + chosenLevel + "/0" + "/interactions/interaction.json";
-		String resultsFile = games.get(Runner.chosenGame) + "/human/" + chosenLevel + "/0" + "/result/result.json";
 		double[] result;
 		try {
 			VisualDemonstrationInterfacer vdi = new VisualDemonstrationInterfacer(games.get(Runner.chosenGame), false);
@@ -148,11 +150,6 @@ public class Runner {
 			bogs.add(game);
 			String[] human = {"human"};
 			vdi.runBunchOfGames(bogs, human, chosenLevel, 0);
-	//		result = ArcadeMachine.playOneGame(gameFile, levelFile, actionFile,
-	//			Runner.random.nextInt(Integer.MAX_VALUE));
-	//		Runner.win = result[0];
-	//		Runner.score = result[1];
-	//		Runner.time = result[2];
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

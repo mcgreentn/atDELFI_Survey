@@ -1,8 +1,16 @@
 <html>
 	<div align="center">
-		This is a testing software which collects playtraces and surveys.<br/>
-		This experiment will help advance the science behind the tutorial generation. Thank you for participating!<br/>
+		CESAGAN Level Playing Software
+	</div>
+	<div align="left">
 		<br/>
-		Play a few game levels, then complete a short survey about the game!<br/>
+		This is a piece of software for exploring CESAGAN generated Zelda levels.<br/>
+		Zelda is a game contained within the GVGAI framework (http://www.gvgai.net/).<br/>
+		CESAGAN, or Conditional Embedding Self Attention Generative Adversarial Network, <br/>
+		is a new architecture that allows for more intelligent automatic level generation in video games.<br/>
+		<br/>
+		Play a few game levels and try them out!<br/>
+		
+		Check out the paper for this project here: https://arxiv.org/pdf/1910.01603.pdf
 	</div>
 </html>
